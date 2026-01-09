@@ -129,7 +129,6 @@ export default function CrownfishScreen({ navigation }: Props) {
     const base = Math.floor(available / 2);
     const clampMin = IS_VERY_TINY ? 138 : IS_TINY ? 148 : 156;
     const clampMax = IS_VERY_TINY ? 170 : IS_TINY ? 182 : 196;
-
     return Math.max(clampMin, Math.min(clampMax, base));
   }, []);
 
@@ -137,7 +136,6 @@ export default function CrownfishScreen({ navigation }: Props) {
 
   const lockIconSize = IS_VERY_TINY ? 34 : IS_TINY ? 36 : IS_SMALL ? 38 : 40;
   const fishIconSize = lockIconSize + 90;
-
   const labelSize = IS_VERY_TINY ? 18 : IS_TINY ? 19 : 20;
 
   const screenOpacity = screenIn;
@@ -150,13 +148,12 @@ export default function CrownfishScreen({ navigation }: Props) {
   const isOdd = data.length % 2 === 1;
 
   const showLockedMessage = (index: number) => {
-    const nextToUnlock = unlockedCollections + 1; // просто для тексту
-    const left = Math.max(0, index - (unlockedCollections - 1)); // умовно "скільки ще до цього"
-    const msg =
-      left <= 1
-        ? 'Ця картка відкриється після проходження наступного рівня.'
-        : 'Ця картка відкривається тільки після проходження гри та відкриття рівнів. Продовжуйте гру, щоб розблокувати її.';
-    Alert.alert('Заблоковано', msg, [{ text: 'OK' }]);
+    const distance = Math.max(0, index - (unlockedCollections - 1));
+    const message =
+      distance <= 1
+        ? 'This card unlocks after you complete the next level.'
+        : 'This card unlocks only by progressing through the game. Keep playing to reveal it.';
+    Alert.alert('Locked', message, [{ text: 'OK' }]);
   };
 
   const renderItem = ({ item, index }: { item: CollectionItem; index: number }) => {
@@ -197,12 +194,8 @@ export default function CrownfishScreen({ navigation }: Props) {
               showLockedMessage(index);
               return;
             }
-            // якщо колись треба дія для відкритих — додаси тут
-            // navigation.navigate('FishFacts', { id: item.id }) і т.д.
           }}
-          style={({ pressed }) => [
-            { transform: [{ scale: pressed ? 0.985 : 1 }] },
-          ]}
+          style={({ pressed }) => [{ transform: [{ scale: pressed ? 0.985 : 1 }] }]}
         >
           <View style={[styles.cardShell, { width: cardSize, height: cardSize }]}>
             <View style={styles.cardInner}>
